@@ -2,10 +2,6 @@
   <div class="container">
     <ul class="w3-ul w3-card-4">
       <li id="idUserList" class="w3-bar" :key='emp.id' v-for='(emp, index) in empData'>
-        <span
-          onclick="this.parentElement.style.display='none'"
-          class="w3-bar-item w3-button w3-white w3-xlarge w3-right"
-        >×</span>
         <div class="w3-bar-item">
           <span id="idNameSpan" @click="onItemClick(index)">{{emp.name}}</span>
           <br />

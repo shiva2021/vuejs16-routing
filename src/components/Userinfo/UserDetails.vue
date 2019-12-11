@@ -11,7 +11,8 @@
           <label class="form-control">Job: {{empData[id].job}}</label>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary" @click="viewContactInfo(id)">Contact Details</button>
+          <button class="btn btn-primary customClass" @click.prevent="navBack">Go Back</button>
+          <button class="btn btn-primary" @click.prevent="viewContactInfo(id)">Contact Details</button>
         </div>
       </form>
     </div>
@@ -35,8 +36,16 @@ export default {
   },
   methods: {
       viewContactInfo(id){
-          this.$router.push({name:`/user/${id}`, params:{name: 'contact'}})
+          this.$router.push({path:`/user/${id}/contact`})
+      },
+      navBack(){
+        this.$router.go(-1)
       }
   }
 };
 </script>
+<style scoped>
+.customClass{
+  margin-right: 2%
+}
+</style>
