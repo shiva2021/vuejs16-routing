@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="col-sm-12 col-md-6 col-lg-6 col-md-offset-5 col-lg-offset-3">
+    <div class="col-sm-12 col-md-6 col-lg-6 col-md-offset-2 col-lg-offset-2">
       <h2>Here's how you can contact your favourite Employee:</h2>
       <br />
       <form>

@@ -19,5 +19,9 @@ module.exports = {
         "vue"
     ],
     "rules": {
-    }
+        "no-console": "off"
+    },
+    extends: [
+        "plugin:vue/essential"
+      ]
 };

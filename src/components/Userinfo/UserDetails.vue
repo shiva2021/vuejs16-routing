@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="col-sm-12 col-md-6 col-lg-6 col-md-offset-5 col-lg-offset-3">
+    <div class="col-sm-12 col-md-6 col-lg-6 col-md-offset-2 col-lg-offset-2">
       <h2>Here's your favourite Employee's details:</h2>
       <br />
       <form>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
       viewContactInfo(id){
-          this.$router.push({path:`/user/${id}/contact`})
+          this.$router.push({path:`/main/user/${id}/contact`})
       },
       navBack(){
         this.$router.go(-1)

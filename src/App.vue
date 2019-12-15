@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <app-homepage></app-homepage>
+    <app-wrapper></app-wrapper>
   </div>
 </template>
 
 <script>
-import Homepage from "./components/HomePage.vue";
+import AppWrapper from "./components/AppWrapper.vue";
 export default {
   name: 'app',
   components:{
-     'app-homepage': Homepage
+     'app-wrapper': AppWrapper
   }
 }
 </script>
