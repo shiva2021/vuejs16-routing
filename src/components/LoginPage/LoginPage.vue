@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import { bus } from "../../main";
+// import { bus } from "../../main";
 export default {
   data() {
     return {
@@ -50,7 +50,7 @@ export default {
           this.usrPwd === this.UsrData.usrPwd
         ) {
           this.$router.push({ path: "/main/Home" });
-          bus.$emit('isAuthenticated', {isAuthenticated: true})
+        //  bus.$emit('isAuthenticated', {isAuthenticated: true})
         }else{
             this._throwException();
         }

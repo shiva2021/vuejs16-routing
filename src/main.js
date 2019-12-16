@@ -12,10 +12,6 @@ const router = new VueRouter({
   mode:"history"
 })
 
-router.afterEach((to, from)=>{
-  console.log(to);
-  console.log(from);
-})
 Vue.use(VueRouter)
 
 new Vue({
