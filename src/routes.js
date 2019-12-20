@@ -5,6 +5,7 @@ const HomePage = () => import("./components/HomePage.vue")
 const UserDetails = () => import("./components/Userinfo/UserDetails.vue")
 const ContactInfo = () => import("./components/Userinfo/ContactInfo.vue")
 const UserPageWrapper = () => import("./components/Userinfo/UserPageWrapper.vue")
+const RegisterUser = () => import("./components/LoginPage/RegisterUser.vue")
 
 // import Mainpage from "./components/MainpageWrapper.vue";
 import LoginPage from "./components/LoginPage/LoginPage.vue"
@@ -15,6 +16,7 @@ import LoginPage from "./components/LoginPage/LoginPage.vue"
 // import UserPageWrapper from "./components/Userinfo/UserPageWrapper.vue";
 export const routes = [
     { path: '/', component: LoginPage },
+    {path: '/register', component: RegisterUser},
     {
         path: '/main', component: Mainpage, children: [
             { path: 'Home', component: HomePage },

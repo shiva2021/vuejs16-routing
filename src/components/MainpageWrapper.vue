@@ -24,25 +24,6 @@ export default {
   components: {
     "my-header-toolbar": HeaderOptions
   },
-  // beforeRouteEnter(to, from, next) {
-  //   var isAuthenticated = false;
-  //   var deferred = jQuery.Deferred();
-  //   bus.$on("isAuthenticated", data => {
-  //     isAuthenticated = data;
-  //     deferred.resolve();
-  //     if (isAuthenticated) next()
-  //     else next('/')
-  //   });
-  //   jQuery.when(deferred).then(function() {
-  //     if (!isAuthenticated) {
-  //       window.alert("Access Denied!!");
-  //       next("/");
-  //     }
-  //   },
-  //   function() {
-  //       next("/");
-  //   });
-  // },
   beforeRouteLeave(to, from, next) {
     if (to.path === "/") {
       if (window.confirm("Do you really want to leave?")) {
