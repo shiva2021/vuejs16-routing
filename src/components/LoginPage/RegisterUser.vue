@@ -13,10 +13,10 @@
           </div>
           <div class="form-group">
             <div class="container">
-              <label for="idusrId">User Id:</label>
+              <label for="idusrEmail">User Email:</label>
             </div>
             <div class="container">
-              <input id="idusrId" type="text" v-model="registerUser.usrId" />
+              <input id="idusrEmail" type="email" v-model="registerUser.usrEmail" />
             </div>
           </div>
           <div class="form-group">
@@ -36,19 +36,19 @@
             </div>
           </div>
           <div class="container">
-          <p>
-            <input type="submit" class="btn btn-default" value="Register" />
-          </p>
+            <p>
+              <input type="submit" class="btn btn-default" value="Register" />
+            </p>
           </div>
         </fieldset>
       </form>
-        <div class="alert-box success">Successful Alert !!!</div>
+      <div class="alert-box success">Successful Alert !!!</div>
     </div>
   </div>
 </template>
 <script>
-import Axios from "axios";
-import $ from "jquery";
+// import Axios from "axios";
+// import $ from "jquery";
 export default {
   data() {
     return {
@@ -58,31 +58,39 @@ export default {
         usrPwd: "",
         usrEmail: ""
       },
-      confirmPwd: ""
+      confirmPwd: "",
+      idToken: ""
     };
   },
-  methods:{
-      checkForm(e){
-          e.preventDefault();
-          if(this.registerUser.usrId && this.registerUser.usrPwd && this.confirmPwd && (this.registerUser.usrPwd === this.confirmPwd)){
-              Axios.post("/users.json", this.registerUser).then(
-                function(){
-                     $( "div.success" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
-                     this.$router.push({path:'/'});
-                }.bind(this)
-              )
-          }else{
-              this.errors.push('Either the passwords do not match or the fields are missing some information!')
-          }
+  methods: {
+    checkForm(e) {
+      var payload = {
+        email: this.registerUser.usrEmail,
+        password: this.registerUser.usrPwd,
+        returnSecureToken: true
+      };
+      e.preventDefault();
+      if (
+        this.registerUser.usrEmail &&
+        this.registerUser.usrPwd &&
+        this.confirmPwd &&
+        this.registerUser.usrPwd === this.confirmPwd
+      ) {
+        this.$store.dispatch("aRegisterUser", payload);
+      } else {
+        this.errors.push(
+          "Either the passwords do not match or the fields are missing some information!"
+        );
       }
+    }
   }
 };
 </script>
 <style scoped>
 .success {
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
-    display: none;
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  display: none;
 }
 </style>

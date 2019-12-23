@@ -9,7 +9,7 @@
               <label for="idusrId">User Id:</label>
             </div>
             <div class="container">
-              <input id="idusrId" type="text" v-model="usrId" />
+              <input id="idusrId" type="email" v-model="usrEmail" />
             </div>
           </div>
           <div class="form-group">
@@ -37,7 +37,7 @@ import jQuery from "jquery";
 export default {
   data() {
     return {
-      usrId: "",
+      usrEmail: "",
       usrPwd: "",
       UsrData: 
         {
@@ -51,21 +51,32 @@ export default {
   },
   methods: {
     onSubmit() {
-      Axios.get("/users.json").then(
+      Axios.post("/accounts:signInWithPassword?key=AIzaSyA86kNN7llYhDW79_sK3eTf1nKHbB7uSD4", {
+        email : this.usrEmail,
+        password: this.usrPwd,
+        returnSecureToken: true
+      }).then(
         function(res){
      
           this.responseData = res.data;
-          jQuery.each(this.responseData, function(prop, value){
-            if((this.usrId === value.usrId) && (this.usrPwd === value.usrPwd) ){
-              this.bAuthenticated = true;
-            }
-          }.bind(this))
-          if(this.bAuthenticated){
-             this.$router.push({ path: "/main/Home" });
-          }else{
-            this.failureMsg = "Incorrect user credentials!"
-          jQuery( "div.failure" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
+          // jQuery.each(this.responseData, function(prop, value){
+          //   if((this.usrId === value.usrId) && (this.usrPwd === value.usrPwd) ){
+          //     this.bAuthenticated = true;
+          //   }
+          // }.bind(this))
+          // if(this.bAuthenticated){
+          //    this.$router.push({ path: "/main/Home" });
+          // }else{
+          //   this.failureMsg = "Incorrect user credentials!"
+          // jQuery( "div.failure" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
+          // }
+        }.bind(this),
+        function(error){
+          if(error.response.data.error.message === "EMAIL_NOT_FOUND"){
+              this.failureMsg = "invalid User";
           }
+            
+          jQuery( "div.failure" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
         }.bind(this)
       );
       // if (this.usrId && this.usrPwd) {

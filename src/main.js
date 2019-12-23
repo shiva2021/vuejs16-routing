@@ -13,7 +13,7 @@ const router = new VueRouter({
   mode:"history"
 })
 
-Axios.defaults.baseURL = "https://project-42b55.firebaseio.com"
+Axios.defaults.baseURL = "https://identitytoolkit.googleapis.com/v1"
 Vue.use(VueRouter)
 
 new Vue({
