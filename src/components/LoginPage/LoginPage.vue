@@ -31,8 +31,8 @@
   </div>
 </template>
 <script>
-import Axios from 'axios';
-import jQuery from "jquery";
+// import Axios from 'axios';
+// import jQuery from "jquery";
 // import { bus } from "../../main";
 export default {
   data() {
@@ -51,47 +51,12 @@ export default {
   },
   methods: {
     onSubmit() {
-      Axios.post("/accounts:signInWithPassword?key=AIzaSyA86kNN7llYhDW79_sK3eTf1nKHbB7uSD4", {
-        email : this.usrEmail,
-        password: this.usrPwd,
-        returnSecureToken: true
-      }).then(
-        function(res){
-     
-          this.responseData = res.data;
-          // jQuery.each(this.responseData, function(prop, value){
-          //   if((this.usrId === value.usrId) && (this.usrPwd === value.usrPwd) ){
-          //     this.bAuthenticated = true;
-          //   }
-          // }.bind(this))
-          // if(this.bAuthenticated){
-          //    this.$router.push({ path: "/main/Home" });
-          // }else{
-          //   this.failureMsg = "Incorrect user credentials!"
-          // jQuery( "div.failure" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
-          // }
-        }.bind(this),
-        function(error){
-          if(error.response.data.error.message === "EMAIL_NOT_FOUND"){
-              this.failureMsg = "invalid User";
-          }
-            
-          jQuery( "div.failure" ).fadeIn( 300 ).delay( 1500 ).fadeOut( 400 );
-        }.bind(this)
-      );
-      // if (this.usrId && this.usrPwd) {
-      //   if (
-      //     this.usrId === this.UsrData.usrId &&
-      //     this.usrPwd === this.UsrData.usrPwd
-      //   ) {
-      //     this.$router.push({ path: "/main/Home" });
-      //   //  bus.$emit('isAuthenticated', {isAuthenticated: true})
-      //   }else{
-      //       this._throwException();
-      //   }
-      // } else {
-      //   this._throwException();
-      // }
+      var oPayload = {
+                email : this.usrEmail,
+                password: this.usrPwd,
+                returnSecureToken: true
+      }
+      this.$store.dispatch('aClickLoginBtn', oPayload);
     },
     _throwException() {
       window.alert("Incorrect credentials! Please try again.");
