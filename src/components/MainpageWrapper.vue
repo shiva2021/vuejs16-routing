@@ -24,12 +24,8 @@ export default {
   components: {
     "my-header-toolbar": HeaderOptions
   },
-  beforeRouteLeave(to, from, next) {
-    if (to.path === "/") {
-      if (window.confirm("Do you really want to leave?")) {
-        next();
-      }
-    }
+  created(){
+    this.$store.dispatch('aValidateToken')
   }
 };
 </script>

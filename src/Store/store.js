@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import Axios from "axios"
 import $ from 'jquery'
 import { customAxios } from "../custom-axios";
+import router from "../router"
+import NProgress from "nprogress";
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
@@ -10,11 +12,11 @@ export const store = new Vuex.Store({
         bAuthenticated: false,
         login:{
             idToken: null,
-            usrEmail: null,
+            usrId: null,
         },
         registerUser:{
             idToken: null,
-            usrEmail: null,
+            usrId: null,
         },
         usrId: null,
         failureMsg: "",
@@ -22,7 +24,9 @@ export const store = new Vuex.Store({
         loginFailureMsg: "",
         saveResponseData: {},
         saveError: {},
-        registeredUserData: {}
+        registeredUserData: {},
+        userData: {},
+        readError: {}
     },
     getters: {
         getFilureMessage: state => {
@@ -47,11 +51,23 @@ export const store = new Vuex.Store({
         aClickLoginBtn({ commit }, payload) {
             commit('mClickLoginBtn', payload);
         },
-        aGetLoginData({ commit }, response) {
-            commit('mGetLoginData', response)
+        aSetLoginData({ commit }, response) {
+            commit('mSetLoginData', response)
         },
         aAddUserToDb({commit}, payload){
             commit('mAddUserToDb', payload)
+        },
+        aReadAllUsers({commit}){
+            commit('mReadAllUsers')
+        },
+        aSetSessionTimeOut({commit}, expiresIn){
+            setTimeout(function(){
+                commit('mSessionTimeOut')
+            }.bind(this), expiresIn * 1000)
+        },
+
+        aValidateToken({commit}){
+            commit('mValidateToken')
         }
     },
 
@@ -84,7 +100,25 @@ export const store = new Vuex.Store({
         mClickLoginBtn(state, payload) {
             Axios.post("/accounts:signInWithPassword?key=AIzaSyA86kNN7llYhDW79_sK3eTf1nKHbB7uSD4", payload).then(
                 function (res) {
-                    store.dispatch('aGetLoginData', res)
+                    NProgress.start();
+                    store.dispatch('aSetLoginData', res)
+
+                    /**Read all the users from Realtime database */
+                    store.dispatch('aReadAllUsers')
+
+                    /**Save token for validating browser session */
+                    localStorage.setItem('idToken', res.data.idToken);
+
+                    /**Setting expirationDate based on token expire time */
+                    const now = new Date();
+                    const expirationDate = new Date(now.getTime() + res.data.expiresIn*1000)
+                    localStorage.setItem('expirationDate', expirationDate)
+
+                    /**Storing User Id in the browser local storage*/
+                    localStorage.setItem('localId', res.data.localId)
+
+                    /**Setting timeout based on expire date */
+                    store.dispatch('aSetSessionTimeOut', res.data.expiresIn)
                 }.bind(this),
                 function (error) {
                     if (error.response.data.error.message === "EMAIL_NOT_FOUND") {
@@ -93,7 +127,7 @@ export const store = new Vuex.Store({
                 }.bind(this)
             );
         },
-        mGetLoginData(state, response) {
+        mSetLoginData(state, response) {
             state.login.usrId = response.data.localId;
             state.login.idToken = response.data.idToken;
         },
@@ -110,6 +144,50 @@ export const store = new Vuex.Store({
                     state.saveError = error;
                 }
             )
+        },
+        mReadAllUsers(state){
+            customAxios.get('/users.json' + '?auth='+state.login.idToken)
+            .then(
+                function(res){
+                    state.userData = res.data;
+                    router.push({path :'/main/Home'});
+                    NProgress.done();
+                }.bind(this)
+            )
+            .catch(
+                error=>{
+                    state.readError = error;
+                }
+            )
+        },
+        mSessionTimeOut(state){
+            state.login.idToken = null;
+            state.login.usrId = null;
+            alert("Session Expired");
+            router.push({path: '/'});
+        },
+
+        mValidateToken(){
+            const sToken = localStorage.getItem('idToken'),
+                sUsrId = localStorage.getItem('localId'),
+                dCurrentDate = new Date(),
+                dExpiryDate = localStorage.getItem('expirationDate');
+            var mLoginData = {};
+
+                if(!sToken){
+                    return
+                }
+                if(dCurrentDate >= dExpiryDate){
+                    return
+                }
+                mLoginData = {
+                    'data': {
+                        'idToken': sToken,
+                        'localId': sUsrId
+                    }
+                }
+
+                store.dispatch('aSetLoginData', mLoginData);
         }
     }
 })

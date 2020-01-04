@@ -1,17 +1,32 @@
 <template>
-    <div class="container">
-        <ul class="nav nav-pills nav-fill">
-            <router-link tag="li" active-class='active' to='/main/Home' exact><a>Home</a></router-link>
-            <router-link tag="li" active-class='active' to='/main/user'><a>User List</a></router-link>
-            <router-link tag="li" active-class='' to='/'><a>Logout</a></router-link>
-        </ul>
-    </div>
+  <div class="container">
+    <ul class="nav nav-pills nav-fill">
+      <router-link tag="li" active-class="active" to="/main/Home" exact>
+        <a>Home</a>
+      </router-link>
+      <router-link tag="li" active-class="active" to="/main/user">
+        <a>User List</a>
+      </router-link>
+      <li @click="onLogout">
+        <a>Logout</a>
+      </li>
+    </ul>
+  </div>
 </template>
 <script>
 export default {
-
-}
+  methods: {
+    onLogout() {
+      if (window.confirm("Do you really want to leave?")) {
+        this.$router.push({path:'/'});
+        localStorage.clear();
+      }
+    }
+  }
+};
 </script>
-<style lang="stylus" scoped>
-
+<style scoped>
+li {
+  cursor: pointer;
+}
 </style>
