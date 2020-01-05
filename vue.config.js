@@ -4,7 +4,7 @@ module.exports = {
       registry: undefined,
       awsProfile: 'default',
       region: 'us-east-1',
-      bucket: 'vuejs-usr-data-app',
+      bucket: 'vue-project-usr-mgmt',
       createBucket: true,
       staticHosting: true,
       staticIndexPage: 'index.html',
