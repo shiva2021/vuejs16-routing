@@ -10,11 +10,11 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         bAuthenticated: false,
-        login:{
+        login: {
             idToken: null,
             usrId: null,
         },
-        registerUser:{
+        registerUser: {
             idToken: null,
             usrId: null,
         },
@@ -54,19 +54,19 @@ export const store = new Vuex.Store({
         aSetLoginData({ commit }, response) {
             commit('mSetLoginData', response)
         },
-        aAddUserToDb({commit}, payload){
+        aAddUserToDb({ commit }, payload) {
             commit('mAddUserToDb', payload)
         },
-        aReadAllUsers({commit}){
+        aReadAllUsers({ commit }) {
             commit('mReadAllUsers')
         },
-        aSetSessionTimeOut({commit}, expiresIn){
-            setTimeout(function(){
+        aSetSessionTimeOut({ commit }, expiresIn) {
+            setTimeout(function () {
                 commit('mSessionTimeOut')
             }.bind(this), expiresIn * 1000)
         },
 
-        aValidateToken({commit}){
+        aValidateToken({ commit }) {
             commit('mValidateToken')
         }
     },
@@ -74,6 +74,7 @@ export const store = new Vuex.Store({
     mutations: {
         mRegisterUser(state, payload) {
             state.registeredUserData = payload;
+            NProgress.start();
             Axios.post("/accounts:signUp?key=AIzaSyA86kNN7llYhDW79_sK3eTf1nKHbB7uSD4", {
                 email: payload.email,
                 password: payload.password,
@@ -84,7 +85,8 @@ export const store = new Vuex.Store({
                     state.registerUser.idToken = response.data.idToken;
                     state.registerUser.usrId = response.data.localId;
                     // this.state.bUserCreated = true;
-                    store.dispatch('aAddUserToDb', state.registeredUserData )
+                    store.dispatch('aAddUserToDb', state.registeredUserData)
+                    
                 }.bind(this),
                 function (error) {
                     var errors = [];
@@ -111,7 +113,7 @@ export const store = new Vuex.Store({
 
                     /**Setting expirationDate based on token expire time */
                     const now = new Date();
-                    const expirationDate = new Date(now.getTime() + res.data.expiresIn*1000)
+                    const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000)
                     localStorage.setItem('expirationDate', expirationDate)
 
                     /**Storing User Id in the browser local storage*/
@@ -132,62 +134,63 @@ export const store = new Vuex.Store({
             state.login.idToken = response.data.idToken;
         },
 
-        mAddUserToDb(state, payload){
+        mAddUserToDb(state, payload) {
             customAxios.post('/users.json' + '?auth=' + state.registerUser.idToken, payload)
-            .then(
-                ()=>{
-                    state.bUserCreated=true
-                }
-            )
-            .catch(
-                error=>{
-                    state.saveError = error;
-                }
-            )
+                .then(
+                    () => {
+                        state.bUserCreated = true
+                        NProgress.done();
+                    }
+                )
+                .catch(
+                    error => {
+                        state.saveError = error;
+                    }
+                )
         },
-        mReadAllUsers(state){
-            customAxios.get('/users.json' + '?auth='+state.login.idToken)
-            .then(
-                function(res){
-                    state.userData = res.data;
-                    router.push({path :'/main/Home'});
-                    NProgress.done();
-                }.bind(this)
-            )
-            .catch(
-                error=>{
-                    state.readError = error;
-                }
-            )
+        mReadAllUsers(state) {
+            customAxios.get('/users.json' + '?auth=' + state.login.idToken)
+                .then(
+                    function (res) {
+                        state.userData = res.data;
+                        router.push({ path: '/main/Home' });
+                        NProgress.done();
+                    }.bind(this)
+                )
+                .catch(
+                    error => {
+                        state.readError = error;
+                    }
+                )
         },
-        mSessionTimeOut(state){
+        mSessionTimeOut(state) {
             state.login.idToken = null;
             state.login.usrId = null;
             alert("Session Expired");
-            router.push({path: '/'});
+            router.push({ path: '/' });
         },
 
-        mValidateToken(){
+        mValidateToken() {
             const sToken = localStorage.getItem('idToken'),
                 sUsrId = localStorage.getItem('localId'),
                 dCurrentDate = new Date(),
                 dExpiryDate = localStorage.getItem('expirationDate');
             var mLoginData = {};
 
-                if(!sToken){
-                    return
+            if (!sToken) {
+                return
+            }
+            if (dCurrentDate >= dExpiryDate) {
+                return
+            }
+            mLoginData = {
+                'data': {
+                    'idToken': sToken,
+                    'localId': sUsrId
                 }
-                if(dCurrentDate >= dExpiryDate){
-                    return
-                }
-                mLoginData = {
-                    'data': {
-                        'idToken': sToken,
-                        'localId': sUsrId
-                    }
-                }
+            }
 
-                store.dispatch('aSetLoginData', mLoginData);
+            store.dispatch('aSetLoginData', mLoginData);
         }
     }
 })
