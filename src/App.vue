@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import AppWrapper from "./components/AppWrapper.vue";
+import AppWrapper from "./components/wrappers/AppWrapper.vue";
 export default {
   name: 'app',
   components:{

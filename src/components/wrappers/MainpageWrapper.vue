@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-import HeaderOptions from "./HeaderOptions.vue";
+import HeaderOptions from "../HeaderOptions";
 // import  jQuery  from "jquery";
 // import { bus } from "../main";
 export default {

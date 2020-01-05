@@ -1,5 +1,5 @@
 const LoginPage = () => import("./components/LoginPage/LoginPage.vue");
-const Mainpage = () => import("./components/MainpageWrapper.vue");
+const Mainpage = () => import("./components/wrappers/MainpageWrapper.vue");
 const UserList = () => import("./components/Userinfo/UserList.vue");
 const HomePage = () => import("./components/HomePage.vue")
 const UserDetails = () => import("./components/Userinfo/UserDetails.vue")

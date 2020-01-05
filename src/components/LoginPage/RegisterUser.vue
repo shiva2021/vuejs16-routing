@@ -11,6 +11,14 @@
               </ul>
             </div>
           </div>
+         <div class="form-group">
+            <div class="container">
+              <label for="idusrName">Full Name:</label>
+            </div>
+            <div class="container">
+              <input id="idusrName" type="text" v-model="registerUser.usrName" />
+            </div>
+          </div>
           <div class="form-group">
             <div class="container">
               <label for="idusrEmail">User Email:</label>
@@ -74,7 +82,7 @@ export default {
     return {
       errors: [],
       registerUser: {
-        usrId: "",
+        usrName: "",
         usrPwd: "",
         usrEmail: "",
         usrContact: ""
