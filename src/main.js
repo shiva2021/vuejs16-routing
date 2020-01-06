@@ -5,6 +5,7 @@ import App from './App.vue';
 import { store } from "./Store/store";
 import Axios from "axios";
 import 'nprogress/nprogress.css'
+import vuetify from './plugins/vuetify';
 export const bus = new Vue();
 
 
@@ -16,5 +17,6 @@ sync(store, router)
 new Vue({
   router,
   store,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')
