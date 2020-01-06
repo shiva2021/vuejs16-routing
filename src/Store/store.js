@@ -26,7 +26,8 @@ export const store = new Vuex.Store({
         saveError: {},
         registeredUserData: {},
         userData: {},
-        readError: {}
+        readError: {},
+        loggedIn: false
     },
     getters: {
         getFilureMessage: state => {
@@ -37,6 +38,9 @@ export const store = new Vuex.Store({
         },
         getUserCreatedStatus: state => {
             return state.bUserCreated
+        },
+        getUserLoginStatue: state => {
+            return state.loggedIn;
         }
     },
     actions: {
@@ -68,6 +72,10 @@ export const store = new Vuex.Store({
 
         aValidateToken({ commit }) {
             commit('mValidateToken')
+        },
+
+        aSetUserLoginStatus({ commit }, loginStatus) {
+            commit('mSetUserLoginStatus', loginStatus)
         }
     },
 
@@ -86,7 +94,7 @@ export const store = new Vuex.Store({
                     state.registerUser.usrId = response.data.localId;
                     // this.state.bUserCreated = true;
                     store.dispatch('aAddUserToDb', state.registeredUserData)
-                    
+
                 }.bind(this),
                 function (error) {
                     var errors = [];
@@ -154,6 +162,10 @@ export const store = new Vuex.Store({
                     function (res) {
                         state.userData = res.data;
                         router.push({ path: '/main/Home' });
+
+                        /**Set User login status **/
+                        store.dispatch('aSetUserLoginStatus', true);
+                        
                         NProgress.done();
                     }.bind(this)
                 )
@@ -191,6 +203,9 @@ export const store = new Vuex.Store({
             }
 
             store.dispatch('aSetLoginData', mLoginData);
+        },
+        mSetUserLoginStatus(state, loginStatus) {
+            state.loggedIn = loginStatus;
         }
     }
 })

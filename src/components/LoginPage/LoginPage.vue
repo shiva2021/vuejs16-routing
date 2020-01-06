@@ -1,48 +1,56 @@
 <template>
   <v-app id="inspire">
     <div id="idLogin" class="container">
-      <v-app-bar app color="deep-purple accent-4" dark>
-        <v-toolbar-title>
-          User Directory Application
-          <code>/</code>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <router-link
-          class="btn btn-default customClass deep-purple accent-4"
-          tag="button"
-          to="/register"
-        >Register User</router-link>
-      </v-app-bar>
       <v-content>
         <v-container class="fill-height" fluid>
           <v-row align="center" justify="center">
-            <v-col cols="12" sm="8" md="4">
+            <v-col cols="12" sm="8" md="5">
               <v-card class="elevation-12">
                 <v-toolbar color="primary" dark flat>
-                  <v-toolbar-title>Login form</v-toolbar-title>
+                  <v-toolbar-title>Login</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
                   <v-form>
-                    <v-text-field 
-                    label="Login" 
-                    name="login" 
-                    :prepend-icon="svgPath"
-                    type="text" 
-                    v-model="usrEmail"/>
-    
-                    <v-text-field
-                      id="password"
-                      label="Password"
-                      :prepend-icon="scgLock"
-                      name="password"
-                      type="password"
-                      v-model="usrPwd"
-                    />
+                    <ValidationProvider name="User Id" rules="required|email">
+                      <div slot-scope="{ errors }">
+                        <v-text-field
+                          label="User Id/Email"
+                          name="login"
+                          :prepend-icon="icons.svgPath"
+                          type="text"
+                          v-model="usrEmail"
+                          :class="{ 'text-gray-700': !errors[0], 'text-red-600': errors[0] }"
+                        />
+                        <span
+                          class="block text-red-600 text-xs absolute bottom-0 left-0"
+                          v-if="errors[0]"
+                        >{{ errors[0] }}</span>
+                      </div>
+                    </ValidationProvider>
+
+                    <ValidationProvider name="Password" rules="required">
+                      <div slot-scope="{ errors }">
+                        <v-text-field
+                          id="password"
+                          label="Password"
+                          :prepend-icon="icons.scgLock"
+                          name="password"
+                          :type="inputType"
+                          v-model="usrPwd"
+                          :append-icon="passwordOuterIcon"
+                          @click:append="onViewPassword"
+                        />
+                        <p>{{ errors[0] }}</p>
+                      </div>
+                    </ValidationProvider>
                   </v-form>
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
-                  <v-spacer />
-                  <v-btn color="primary" @click="onSubmit">Login</v-btn>
+                  <div class="container">
+                    <a @click="onNewUserRegister">Register New User</a>
+                  </div>
+                  <v-btn color="primary" class="customMargin" @click="onSubmit">Login</v-btn>
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -53,15 +61,36 @@
   </v-app>
 </template>
 <script>
-// import Axios from 'axios';
-// import jQuery from "jquery";
-// import { bus } from "../../main";
-import { mdiAccount, mdiLockOutline } from '@mdi/js'
+import { mdiAccount, mdiLockOutline, mdiEye, mdiEyeOff } from "@mdi/js";
+import { ValidationProvider, extend } from "vee-validate";
+import { email } from "vee-validate/dist/rules";
+extend("required", {
+  validate(value) {
+    return {
+      required: true,
+      valid: ["", null, undefined].indexOf(value) === -1
+    };
+  },
+  computesRequired: true
+});
+
+extend("email", {
+  ...email,
+  message: "Please enter a valid email!"
+});
+
 export default {
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
-      svgPath: mdiAccount,
-      scgLock: mdiLockOutline,
+      passwordOuterIcon: mdiEyeOff,
+      icons: {
+        svgPath: mdiAccount,
+        scgLock: mdiLockOutline
+      },
+      inputType: "password",
       usrEmail: "",
       usrPwd: "",
       UsrData: {
@@ -84,6 +113,18 @@ export default {
     },
     _throwException() {
       window.alert("Incorrect credentials! Please try again.");
+    },
+    onViewPassword() {
+      if (this.inputType === "password") {
+        this.inputType = "text";
+        this.passwordOuterIcon = mdiEye;
+      } else {
+        this.inputType = "password";
+        this.passwordOuterIcon = mdiEyeOff;
+      }
+    },
+    onNewUserRegister() {
+      this.$router.push("/register");
     }
   }
 };
@@ -111,5 +152,9 @@ legend {
   background-color: #f2dede;
   border-color: #ebccd1;
   display: none;
+}
+
+.customMargin {
+  margin-left: 45%;
 }
 </style>

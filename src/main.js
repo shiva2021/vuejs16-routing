@@ -6,8 +6,6 @@ import { store } from "./Store/store";
 import Axios from "axios";
 import 'nprogress/nprogress.css'
 import vuetify from './plugins/vuetify';
-export const bus = new Vue();
-
 
 Vue.config.productionTip = false
 Axios.defaults.baseURL = "https://identitytoolkit.googleapis.com/v1"

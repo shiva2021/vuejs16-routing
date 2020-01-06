@@ -8,10 +8,20 @@ const UserPageWrapper = () => import("./components/Userinfo/UserPageWrapper.vue"
 const RegisterUser = () => import("./components/LoginPage/RegisterUser.vue")
 
 // import LoginPage from "./components/LoginPage/LoginPage.vue"
-// import {store} from "./Store/store";
+import { store } from "./Store/store";
 export const routes = [
-    { path: '/', component: LoginPage },
-    { path: '/register', component: RegisterUser },
+    { path: '/', component: LoginPage,
+    beforeEnter(to, from, next) {
+        store.dispatch('aSetUserLoginStatus', false)
+        next()
+    } },
+    {
+        path: '/register', component: RegisterUser,
+        beforeEnter(to, from, next) {
+            store.dispatch('aSetUserLoginStatus', true)
+            next()
+        }
+    },
     {
         path: '/main', component: Mainpage, children: [
             {

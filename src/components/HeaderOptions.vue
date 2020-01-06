@@ -19,6 +19,7 @@ export default {
     onLogout() {
       if (window.confirm("Do you really want to leave?")) {
         this.$router.push({path:'/'});
+        this.$store.dispatch('aSetUserLoginStatus', false)
         localStorage.clear();
       }
     }
