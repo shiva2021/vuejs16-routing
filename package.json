@@ -22,7 +22,7 @@
     "vuetify": "^2.1.0",
     "vuex": "^3.1.2",
     "vuex-router-sync": "^5.0.0",
-    "yarn": "^1.21.1"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "@mdi/font": "^4.7.95",
